@@ -743,7 +743,7 @@ Y^{k+1} \leftarrow Y^k + \rho (P - Q)
 $$
 
 ## 3. Continuous Association:
-### Hungarian Algorithm
+### KM Algorithm
 We need to construct a cost matrix where each element represents the matching cost between a person in two frames (based on the distance or similarity measure of human poses in the two point cloud data). Then, using the Hungarian algorithm, we can find the optimal matching in this matrix, i.e., select a set of pairs such that the total matching cost is minimized.
 
 # Ⅳ. References
