@@ -603,3 +603,130 @@ The Hungarian Algorithm is used to solve two problems: finding the maximum match
 ### (10) KM Algorithm
 The overall idea is to match a vertex to the maximum weight edge and use the Hungarian Algorithm to achieve the maximum matching. Ultimately, this results in the optimal matching.
 
+# Ⅱ Challenges
+## 1. Affinity Matrix:
+**Input:** Fundamental matrix, set of all key points  
+**Output:** Matching matrix  
+The values in the matching matrix are calculated using the epipolar constraint. If two key points are matched, the result of multiplying by the fundamental matrix should be zero.
+
+## 2. Cycle Consistency:
+### (1) How to ensure cycle consistency?
+Assume matrix $P$ is an $m \times m$ matching matrix, where $P_{ij}=1$ indicates that the $i$-th box matches with the $j$-th box.
+
+$$
+\left[
+\begin{matrix}
+ P_{11}     & P_{12}      & \cdots & P_{1m}     \\
+ P_{21}      & P_{22}      & \cdots & P_{2m}      \\
+ \vdots & \vdots & \ddots & \vdots \\
+ P_{m1}      & P_{m2}      & \cdots & P_{mm}      \\
+\end{matrix}
+\right]
+$$
+
+where $P_{ii}$ should be the fundamental matrix. To ensure cycle consistency: $\text{rank}(P) \leq s$, where $s$ is the number of potential objects.
+
+Thus, the current problem is to construct a matching matrix $P$ from the affinity matrix $A$, such that $P$ satisfies:
+
+$$
+\begin{cases}
+\text{rank}(P) \leq s \\
+\text{max} \langle A, P \rangle
+\end {cases}
+$$
+
+This can be solved using the Lagrangian equation.
+
+### (2) Constructing the Lagrangian Equation
+Originally, the goal was to maximize $\langle A, P \rangle$. By adding a negative sign, this can be transformed into minimizing $-\langle A, P \rangle$.
+
+$$
+f(P) = -\sum_{i=0}^n\sum_{j=0}^n \langle A_{ij}, P_{ij} \rangle + \lambda \text{rank}(P) \\
+= -\langle A, P \rangle + \lambda \text{rank}(P)
+$$
+
+Since minimizing rank is a non-convex problem, we approximate it by minimizing the nuclear norm. The problem becomes:
+
+$$\min_P -\langle A, P \rangle + \lambda \{||}P\{||}_*$$
+
+$$\text{s.t. } P \in C$$
+
+$$C: \begin{cases}
+P_{ij} = P_{ji}^T \\
+P_{ii} = I \\
+0 \leq P_{ij}1 \leq 1, \; 0 \leq P_{ij}^T1 \leq 1
+\end{cases}
+$$
+
+### (3) Solving the Lagrangian Equation with ADMM + SVT
+Introduce an auxiliary variable $Q$ (the auxiliary variable is mainly to solve for the matrix of minimum rank:
+
+$$\min_P - \langle A, P \rangle + \lambda \{||}Q\{||}_*$$
+
+$$\text{s.t. } P \in C, \; P = Q$$
+
+$$C: \begin{cases}
+P_{ij} = P_{ji}^T \\
+P_{ii} = I \\
+0 \leq P_{ij}1 \leq 1, \; 0 \leq P_{ij}^T1 \leq 1
+\end{cases}$$
+
+The augmented Lagrangian function is:
+
+$$
+L_\rho(P, Q, Y) = -\langle A, P \rangle + \lambda \{||}Q\{||}_* + \langle Y, P - Q \rangle + \frac{\rho}{2} \{||}P - Q\{||}_F^2
+$$
+
+Optimize $Q$:
+
+$$\text{Remove terms not related to } Q$$
+
+$$\min_Q \lambda \|Q\|_* + \langle Y, P - Q \rangle + \frac{\rho}{2} \|P - Q\|_F^2$$
+
+$$\text{Expand}$$
+
+$$\min_Q \lambda \|Q\|_* + \langle Y, P \rangle - \langle Y, Q \rangle + \frac{\rho}{2} (\|P\|_F^2 - 2 \langle Q, P \rangle + \|Q\|_F^2)$$
+
+$$\min_Q \lambda \|Q\|_* + \frac{\rho}{2} (\|Q\|_F^2 - 2 \langle Q, P + \frac{1}{\rho} Y \rangle) + \text{const}$$
+
+$$\text{Since const does not affect optimization, this can be simplified to:}$$
+
+$$\min_Q \lambda \|Q\|_* + \frac{\rho}{2} \|Q - (P + \frac{1}{\rho} Y)\|_F^2$$
+
+$$\text{This can be solved using the SVT method}$$
+
+$$Q \leftarrow \text{SVT}(P + \frac{1}{\rho} Y)$$
+
+Optimize $P$:
+
+$$\text{Remove terms not related to } P$$
+
+$$\min_P \langle A, P \rangle + \langle Y, P - Q \rangle + \frac{\rho}{2} \|P - Q\|_F^2$$
+
+$$\min_P \langle A + Y, P \rangle - \langle Y, Q \rangle + \frac{\rho}{2} \|P - Q\|_F^2$$
+
+$$\text{Since } \langle Y, Q \rangle \text{ does not affect } P, \text{ this term can be ignored}$$
+
+$$\min_P \langle A + Y, P \rangle + \frac{\rho}{2} \|P - Q\|_F^2$$
+
+$$\min_P \frac{\rho}{2} \|P - (Q - \frac{1}{\rho} (A + Y))\|_F^2$$
+
+$$\text{Finally, due to additional constraints, the update step for } P \text{ is:}$$
+
+$$P \leftarrow \text{Proj}_{\mathcal{C}}\left(Q - \frac{1}{\rho}(A + Y)\right)$$
+
+$$\text{where } \text{Proj}_{\mathcal{C}}(\cdot) \text{ denotes the projection operation.}$$
+
+Optimize $Y$:
+
+$$
+\text{Gradient descent method:} \\
+Y^{k+1} \leftarrow Y^k + \rho (P - Q)
+$$
+
+## 3. Continuous Association:
+### (1) Hungarian Algorithm
+We need to construct a cost matrix where each element represents the matching cost between a person in two frames (based on the distance or similarity measure of human poses in the two point cloud data). Then, using the Hungarian algorithm, we can find the optimal matching in this matrix, i.e., select a set of pairs such that the total matching cost is minimized.
+
+
+
