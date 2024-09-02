@@ -208,7 +208,9 @@ $$
 The solving conditions are:
 
 $$
-\frac {\nabla L(x,\lambda )}{\nabla x}=0 \quad \text{(The linearly related gradients cancel each other out)}\\
+\frac {\nabla L(x,\lambda )}{\nabla x}=0 \quad \text{(The linearly related gradients cancel each other out)}$$
+
+$$
 \frac {\nabla L(x,\lambda )}{\nabla \lambda}=0 \quad \text{(Ensuring the constraint condition)}
 $$
 
@@ -217,12 +219,13 @@ The reason $\mu > 0$ is as follows: On the side of $g(x) \leq 0$, the gradient o
 ### (4) Lagrangian Dual Solution
 The Lagrangian dual function is the function obtained by taking the Lagrangian function $\lambda,\mu$ as constants and minimizing with respect to $x$:
 
-$$
-g(\lambda, \mu )= \min_{x}(L(x,λ,\mu))\\
-L(x,λ,\mu)=f(x)+λ^Th(x)+\mu^Tg(x)\\
-h(x)=0, \quad g(x) \mu <= 0\\
-\therefore \text{min }f(x)\geq \text{min }L(x,λ,\mu)\geq g(\lambda, \mu )
-$$
+$$g(\lambda, \mu )= \min_{x}(L(x,λ,\mu))$$
+
+$$L(x,λ,\mu)=f(x)+λ^Th(x)+\mu^Tg(x)$$
+
+$$h(x)=0, \quad g(x) \mu <= 0$$
+
+$$\therefore \text{min }f(x)\geq \text{min }L(x,λ,\mu)\geq g(\lambda, \mu )$$
 
 The problem of solving $\text{min }f(x)$ turns into solving the maximum of $g(\lambda, \mu)$.
 
@@ -350,10 +353,10 @@ Sure! Here's the translation of your text into English:
 
 **Optimization Problem:**
 
-$$
-\text{minimize}_{x_1, x_2} \quad f(x_1, x_2) = 2(x_1 - 1)^2 + (x_2 + 2)^2
-$$
+$$\text{minimize}_{x_1, x_2} \quad f(x_1, x_2) = 2(x_1 - 1)^2 + (x_2 + 2)^2$$
+
 subject to:
+
 $$
 \begin{cases}
 x_1 \geq 2 \\
@@ -363,44 +366,31 @@ $$
 
 **Lagrangian Function:**
 
-$$
-L(x_1, x_2, \lambda_1, \lambda_2) = 2(x_1 - 1)^2 + (x_2 + 2)^2 + \lambda_1(2 - x_1) + \lambda_2(-x_2)
-$$
+$$L(x_1, x_2, \lambda_1, \lambda_2) = 2(x_1 - 1)^2 + (x_2 + 2)^2 + \lambda_1(2 - x_1) + \lambda_2(-x_2)$$
 
 - **Analytical Solution for Decision Variables $x_1, x_2$:**
 
-$$
-\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_1} = 0
-$$
-$$
-\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_2} = 0
-$$
+$$\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_1} = 0$$
+
+$$\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_2} = 0$$
 
 Solving these equations, we get:
 
-$$
-x_1^* = \frac{\lambda_1}{4} + 1
-$$
-$$
-x_2^* = \frac{\lambda_2}{2} - 2
-$$
+$$x_1^* = \frac{\lambda_1}{4} + 1$$
+
+$$x_2^* = \frac{\lambda_2}{2} - 2$$
 
 - **Iterative Solution for Decision Variables $x_1, x_2$:**
-$$
-\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_1} = 4(x_1-1)-\lambda_1
-$$
-$$
-\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_2} = 2(x_2+2)-\lambda_2
-$$
+  
+$$\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_1} = 4(x_1-1)-\lambda_1$$
+
+$$\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_2} = 2(x_2+2)-\lambda_2$$
 
 Solving these equations, we get:
 
-$$
-x_1^{k+1} = x_1^k - t_x[4(x_1-1) - \lambda_1]
-$$
-$$
-x_2^{k+1} = x_2^k - t_x[2(x_2+2) - \lambda_2]
-$$
+$$x_1^{k+1} = x_1^k - t_x[4(x_1-1) - \lambda_1]$$
+
+$$x_2^{k+1} = x_2^k - t_x[2(x_2+2) - \lambda_2]$$
 
 The negative sign is because we are moving in the direction of the negative gradient, which will gradually reduce the value of the Lagrangian function $L(x, \lambda)$.
 
@@ -408,12 +398,9 @@ The negative sign is because we are moving in the direction of the negative grad
 
 For the $(k+1)$-th iteration:
 
-$$
-\lambda_1^{k+1} = \lambda_1^k + t_\lambda (2 - x_1)
-$$
-$$
-\lambda_2^{k+1} = \lambda_2^k + t_\lambda (-x_2)
-$$
+$$\lambda_1^{k+1} = \lambda_1^k + t_\lambda (2 - x_1)$$
+
+$$\lambda_2^{k+1} = \lambda_2^k + t_\lambda (-x_2)$$
 
 The positive sign is because we are maximizing the dual function.
 
@@ -424,9 +411,9 @@ Termination Conditions:
 
 ### (3) Augmented Lagrangian
 To increase the robustness of the dual ascent method and relax the strong convex constraints of the function $f(x)$, we introduce the Augmented Lagrangian (AL) form:
-$$
-L_{\rho}(x, \lambda) = f(x) + \lambda^{T}(Ax - b) + \frac{\rho}{2} \|Ax - b\|_{2}^{2}
-$$
+
+$$L_{\rho}(x, \lambda) = f(x) + \lambda^{T}(Ax - b) + \frac{\rho}{2} \|Ax - b\|_{2}^{2}$$
+
 where the penalty factor $\rho > 0$.
 Penalty function: If constraints are satisfied, there is no effect, but if constraints are not satisfied, a penalty will be applied.
 
@@ -456,19 +443,17 @@ The Augmented Lagrangian function adds a penalty term related to the constraint 
 Each step updates one variable while fixing the other two, and repeats this alternation.
 
 - Step 1: Update $x$:
-  $$
-  x^{(i)} = \mathrm{argmin}_x \, L_{\rho}(x, z^{(i-1)}, u^{(i-1)})
-  $$
+
+$$x^{(i)} = argmin_x L_{\rho}(x, z^{(i-1)}, u^{(i-1)})$$
+
 
 - Step 2: Update $z$:
-  $$
-  z^{(i)} = \mathrm{argmin}_z \, L_{\rho}(x^{(i)}, z, u^{(i-1)})
-  $$
+
+$$z^{(i)} = argmin_z L_{\rho}(x^{(i)}, z, u^{(i-1)})$$
 
 - Step 3: Update $u$:
-  $$
-  u^{(i)} = u^{(i-1)} + \rho (Ax^{(i)} + Bz^{(i)} - c)
-  $$
+  
+$$u^{(i)} = u^{(i-1)} + \rho (Ax^{(i)} + Bz^{(i)} - c)$$
 
 ## 5. Linear Algebra
 ### (1) Rank
@@ -481,9 +466,7 @@ The nuclear norm, also known as the trace norm, is a convex function. It is defi
 ### (3) Frobenius Norm
 The Frobenius norm is a measure of matrix size. It is defined as the square root of the sum of the squares of all elements in the matrix. For a matrix $A \in \mathbb{R}^{m \times n}$, its Frobenius norm is defined as:
 
-$$
-\|A\|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2}
-$$
+$$\|A\|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2}$$
 
 where $a_{ij}$ represents the element in the $i$-th row and $j$-th column of matrix $A$.
 
@@ -495,10 +478,9 @@ Suppose we have a partially observed matrix $M$, with observed data at positions
 
 This problem can be formalized as:
 
-$$
-\min_X \|X\|_* \\
-\text{subject to} \quad X_\Omega = M_\Omega
-$$
+$$\min_X \|X\|_*$$
+
+$$\text{subject to} \quad X_\Omega = M_\Omega$$
 
 where $\|X\|_*$ denotes the nuclear norm of matrix $X$, and $X_\Omega = M_\Omega$ ensures consistency of $X$ with $M$ at $\Omega$.
 
@@ -510,19 +492,17 @@ To use ADMM, we introduce
 
  an auxiliary matrix variable $Z$ to represent the matrix $X$.
 
-$$
-\min_{X, Z} \|Z\|_* \\
-\text{subject to} \quad X = Z \\
-\text{and} \quad X_\Omega = M_\Omega
-$$
+$$\min_{X, Z} \|Z\|_*$$
+
+$$\text{subject to} \quad X = Z$$
+
+$$\text{and} \quad X_\Omega = M_\Omega$$
 
 #### Augmented Lagrangian Form
 
 The Augmented Lagrangian for this problem is:
 
-$$
-L(X, Z, U) = \|Z\|_* + \langle U, X - Z \rangle + \frac{\rho}{2} \|X - Z\|_F^2
-$$
+$$L(X, Z, U) = \|Z\|_* + \langle U, X - Z \rangle + \frac{\rho}{2} \|X - Z\|_F^2$$
 
 where $U$ is the dual variable associated with the equality constraint $X = Z$.
 
@@ -530,21 +510,15 @@ where $U$ is the dual variable associated with the equality constraint $X = Z$.
 
 1. **Update $X$:** Solve for $X$ by minimizing the Augmented Lagrangian with respect to $X$ while holding $Z$ and $U$ fixed. This involves solving:
 
-$$
-X^{(k+1)} = \text{argmin}_X \, \|Z^{(k)}\|_* + \langle U^{(k)}, X - Z^{(k)} \rangle + \frac{\rho}{2} \|X - Z^{(k)}\|_F^2
-$$
+$$X^{(k+1)} = \text{argmin}_X \, \|Z^{(k)}\|_* + \langle U^{(k)}, X - Z^{(k)} \rangle + \frac{\rho}{2} \|X - Z^{(k)}\|_F^2$$
 
 2. **Update $Z$:** Solve for $Z$ by minimizing the Augmented Lagrangian with respect to $Z$ while holding $X$ and $U$ fixed. This involves solving:
 
-$$
-Z^{(k+1)} = \text{argmin}_Z \, \|Z\|_* + \langle U^{(k)}, X^{(k+1)} - Z \rangle + \frac{\rho}{2} \|X^{(k+1)} - Z\|_F^2
-$$
+$$Z^{(k+1)} = \text{argmin}_Z \, \|Z\|_* + \langle U^{(k)}, X^{(k+1)} - Z \rangle + \frac{\rho}{2} \|X^{(k+1)} - Z\|_F^2$$
 
 3. **Update $U$:** Update the dual variable $U$ by:
 
-$$
-U^{(k+1)} = U^{(k)} + \rho (X^{(k+1)} - Z^{(k+1)})
-$$
+$$U^{(k+1)} = U^{(k)} + \rho (X^{(k+1)} - Z^{(k+1)})$$
 
 #### Termination Conditions
 
