@@ -347,7 +347,6 @@ $$
 $$
 
 where $\alpha^{k} > 0$ is the step size.
-Sure! Here's the translation of your text into English:
 
 ### Example:
 
