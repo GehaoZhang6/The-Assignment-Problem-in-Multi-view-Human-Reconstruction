@@ -3,12 +3,12 @@
 <table>
   <tr>
     <td style="text-align: center;">
-      <img src="real-time.gif" alt="Real time" width="470"/>
+      <img src="real-time.gif" alt="Real time" width="400"/>
       <br>
       <span style="font-weight: bold; font-size: 28px;">Real time</span>
     </td>
     <td style="text-align: center;">
-      <img src="Post-processing.gif" alt="Post-processing" width="470"/>
+      <img src="Post-processing.gif" alt="Post-processing" width="400"/>
       <br>
       <span style="font-weight: bold; font-size: 28px;">Post-processing</span>
     </td>
