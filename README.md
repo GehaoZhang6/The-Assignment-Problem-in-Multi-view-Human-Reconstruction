@@ -411,7 +411,7 @@ Termination Conditions:
 ### (3) Augmented Lagrangian
 To increase the robustness of the dual ascent method and relax the strong convex constraints of the function $f(x)$, we introduce the Augmented Lagrangian (AL) form:
 
-$$L_{\rho}(x, \lambda) = f(x) + \lambda^{T}(Ax - b) + \frac{\rho}{2} \|Ax - b\|_{2}^{2}$$
+$$L_{\rho}(x, \lambda) = f(x) + \lambda^{T}(Ax - b) + \frac{\rho}{2} \{||}Ax - b\{||}_{2}^{2}$$
 
 where the penalty factor $\rho > 0$.
 Penalty function: If constraints are satisfied, there is no effect, but if constraints are not satisfied, a penalty will be applied.
@@ -432,7 +432,7 @@ The standard ADMM algorithm solves an equality-constrained problem where the two
 The core of the ADMM algorithm is the Augmented Lagrangian Method (ALM) for primal-dual problems. The Lagrangian function solves an optimization problem with $n$ variables and $k$ constraints. The Augmented Lagrangian Method (ALM) includes a penalty term to accelerate convergence.
 
 $$
-L_{\rho}(x, z, u) = f(x) + g(z) + u^T(Ax + Bz - c) + \frac{\rho}{2}\|Ax + Bz - c\|^2_2
+L_{\rho}(x, z, u) = f(x) + g(z) + u^T(Ax + Bz - c) + \frac{\rho}{2}\{||}Ax + Bz - c\{||}^2_2
 $$
 
 The Augmented Lagrangian function adds a penalty term related to the constraint conditions to the original problem's Lagrangian function, with $\rho > 0$ as a parameter influencing iteration efficiency. The function for minimizing is + dual term and penalty term, for maximizing is - dual term and penalty term.
@@ -499,35 +499,107 @@ $$\text{subject to} \quad X = Z$$
 
 $$\text{and} \quad X_\Omega = M_\Omega$$
 
-#### Augmented Lagrangian Form
+#### Constructing the Lagrangian Function
 
-The Augmented Lagrangian for this problem is:
+Using the Lagrange multiplier method, we introduce the multiplier $Y$ and construct the Lagrangian function:
 
-$$L(X, Z, U) = \|Z\|_* + \langle U, X - Z \rangle + \frac{\rho}{2} \|X - Z\|_F^2$$
+$$
+L(X, Z, Y) =  \{||}Z\{||}_* + \frac{\rho}{2} \{||}X - Z + Y\{||}_F^2 + 
+$$
 
-where $U$ is the dual variable associated with the equality constraint $X = Z$.
+$$
+\frac{\lambda}{2} \{||} X_\Omega - M_\Omega \{||}_F^2
+$$
 
-#### Iterative Update
+where $\rho$ is a tuning parameter in ADMM, $\lambda$ is the penalty coefficient for the constraints, and $\|\cdot\|_F$ denotes the Frobenius norm of the matrix.
 
-1. **Update $X$:** Solve for $X$ by minimizing the Augmented Lagrangian with respect to $X$ while holding $Z$ and $U$ fixed. This involves solving:
+#### ADMM Iteration Steps
 
-$$X^{(k+1)} = \text{arg}\min_X \, \|Z^{(k)}\|_* + \langle U^{(k)}, X - Z^{(k)} \rangle + \frac{\rho}{2} \|X - Z^{(k)}\|_F^2$$
+ADMM updates the variables $X$, $Z$, and $Y$ by alternately minimizing the Lagrangian function. The update formulas are as follows:
 
-2. **Update $Z$:** Solve for $Z$ by minimizing the Augmented Lagrangian with respect to $Z$ while holding $X$ and $U$ fixed. This involves solving:
+**Update $X$:**
 
-$$Z^{(k+1)} = \text{arg}\min_Z \, \|Z\|_* + \langle U^{(k)}, X^{(k+1)} - Z \rangle + \frac{\rho}{2} \|X^{(k+1)} - Z\|_F^2$$
+$$
+X^{k+1} = \arg \min_X \left( \frac{\lambda}{2} \{||}X_\Omega -M_\Omega \{||}_F^2 + \frac{\rho}{2} \{||}X^{k+1} - Z + Y^k\{||}_F^2 \right)
+$$
 
-3. **Update $U$:** Update the dual variable $U$ by:
+This update formula is a constrained least squares problem and can be solved using simple algebraic operations.
 
-$$U^{(k+1)} = U^{(k)} + \rho (X^{(k+1)} - Z^{(k+1)})$$
+<h3 style="color: red;">Update $Z$ (using Singular Value Thresholding):</h3>
 
-#### Termination Conditions
+$$
+Z^{k+1} = \arg \min_Z \left( \{||}Z\{||}_* + \frac{\rho}{2} \{||}X^{k+1} - Z + Y^k\{||}_F^2 \right)
+$$
 
-The iterations stop when the primal and dual residuals are sufficiently small, indicating convergence. The residuals measure the satisfaction of the constraints and the optimality of the solution, respectively.
+In this update step, Singular Value Thresholding (SVT) is used to update the matrix $Z$. Specifically, let the singular value decomposition of $X^{k+1} + Y^k$ be $U \Sigma V^T$, then:
 
-**Termination Conditions:**
-1. Primal residual: $\|X^{(k+1)} - Z^{(k+1)}\|_F$
-2. Dual residual: $\rho \|Z^{(k+1)} - Z^{(k)}\|_F$
+$$
+Z^{k+1} = U \mathcal{S}_{\frac{1}{\rho}}(\Sigma) V^T
+$$
 
-When these residuals are smaller than predefined thresholds, the algorithm is considered to have converged.
+where $\mathcal{S}_{\frac{1}{\rho}}(\Sigma)$ is the soft-thresholding of the singular values, given by:
+
+$$
+\mathcal{S}_{\frac{1}{\rho}}(\sigma_i) = \max(\sigma_i - \frac{1}{\rho}, 0)
+$$
+
+Each singular value $\sigma_i$ is thresholded to obtain the updated $Z^{k+1}$.
+
+**Update the Lagrange Multiplier $Y$:**
+
+$$
+Y^{k+1} = Y^k + X^{k+1} - Z^{k+1}
+$$
+
+Repeat the above update steps until the variables $X$, $Z$, and $Y$ converge.
+
+## 6. Graph Theory
+### (1) Bipartite Graph
+- A bipartite graph is a special model in graph theory. A graph $G=(V, E)$ is called a bipartite graph if its vertex set $V$ can be divided into two disjoint sets such that every edge connects vertices from different sets.
+
+### (2) Matching
+- A matching in a graph $G$ is a set of edges with no common vertices and no cycles.
+- Key points of matching: 1. A matching is a set of edges; 2. No two edges in this set share a common vertex.
+
+### (3) Maximum Matching
+- A maximum matching refers to a subset of edges in a given graph such that no two edges share a vertex and the number of edges is maximized. In other words, a maximum matching is a set of the largest number of edges where no two edges intersect. The problem is to find the largest set of non-intersecting edges, covering as many vertices as possible.
+
+### (4) Perfect Matching
+- A perfect matching is a special case of maximum matching. If a matching covers every vertex of the graph exactly once, it is called a perfect matching.
+
+### (5) Optimal Matching
+- Optimal matching, also known as weighted maximum matching, refers to finding a matching in a weighted bipartite graph that maximizes the sum of the weights of the matched edges.
+
+Example:
+
+```
+                                    X: {Employee A, Employee B, Employee C}
+                                    Y: {Task 1, Task 2, Task 3}
+
+                                    Edge weights:
+                                    A-1: 5, A-2: 8, A-3: 6
+                                    B-1: 4, B-2: 7, B-3: 3
+                                    C-1: 9, C-2: 6, C-3: 4
+
+                                    Optimal matching might be:
+                                    A -> Task 2 (weight 8)
+                                    B -> Task 3 (weight 3)
+                                    C -> Task 1 (weight 9)
+                                    Total weight: 8 + 3 + 9 = 20
+```
+
+### (6) Minimum Vertex Cover
+- The minimum vertex cover problem refers to finding the smallest number of vertices such that every edge in the graph is incident to at least one vertex in this set. In other words, if you select a set of vertices that cover all edges, it is a vertex cover.
+
+### (7) Alternating Path
+- An alternating path starts from an unmatched vertex and alternates between unmatched and matched edges.
+
+### (8) Augmenting Path
+- If an alternating path ends at another unmatched vertex (other than the starting vertex), it is called an augmenting path.
+
+### (9) Hungarian Algorithm
+The Hungarian Algorithm is used to solve two problems: finding the maximum matching number in a bipartite graph and the minimum vertex cover number. Essentially, it iterates to find the optimal solution.
+
+### (10) KM Algorithm
+The overall idea is to match a vertex to the maximum weight edge and use the Hungarian Algorithm to achieve the maximum matching. Ultimately, this results in the optimal matching.
 
