@@ -458,6 +458,7 @@ $$u^{(i)} = u^{(i-1)} + \rho (Ax^{(i)} + Bz^{(i)} - c)$$
 ## 5. Linear Algebra
 ### (1) Rank
 Why is $rank(A)$ a non-convex problem?
+
 Consider the matrix set $\{P : \text{rank}(P) \leq k\}$; this is a non-convex set. Suppose two matrices $P_1$ and $P_2$ have ranks $k_1$ and $k_2$ respectively (assuming $k_1 = k_2 = k$). Then, $\lambda P_1 + (1 - \lambda) P_2$ (where $0 \leq \lambda \leq 1$) may have a rank greater than $k$. This means the rank minimization problem does not have the properties of a convex set.
 
 ### (2) Nuclear Norm
@@ -466,7 +467,7 @@ The nuclear norm, also known as the trace norm, is a convex function. It is defi
 ### (3) Frobenius Norm
 The Frobenius norm is a measure of matrix size. It is defined as the square root of the sum of the squares of all elements in the matrix. For a matrix $A \in \mathbb{R}^{m \times n}$, its Frobenius norm is defined as:
 
-$$\|A\|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2}$$
+$$\sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2}$$
 
 where $a_{ij}$ represents the element in the $i$-th row and $j$-th column of matrix $A$.
 
@@ -478,11 +479,12 @@ Suppose we have a partially observed matrix $M$, with observed data at positions
 
 This problem can be formalized as:
 
-$$\min_X \|X\|_*$$
+$$\min_X \{||}X\{||}_* \quad
+\text{denotes the nuclear norm of matrix X}$$
 
-$$\text{subject to} \quad X_\Omega = M_\Omega$$
+$$\text{subject to} \quad X_\Omega = M_\Omega \quad
+\text{ensures consistency of X with M at} \Omega$$
 
-where $\|X\|_*$ denotes the nuclear norm of matrix $X$, and $X_\Omega = M_\Omega$ ensures consistency of $X$ with $M$ at $\Omega$.
 
 ### Solving Using ADMM
 
@@ -492,7 +494,7 @@ To use ADMM, we introduce
 
  an auxiliary matrix variable $Z$ to represent the matrix $X$.
 
-$$\min_{X, Z} \|Z\|_*$$
+$$\min_{X, Z} \{||}Z\{||}_*$$
 
 $$\text{subject to} \quad X = Z$$
 
@@ -510,11 +512,11 @@ where $U$ is the dual variable associated with the equality constraint $X = Z$.
 
 1. **Update $X$:** Solve for $X$ by minimizing the Augmented Lagrangian with respect to $X$ while holding $Z$ and $U$ fixed. This involves solving:
 
-$$X^{(k+1)} = \text{argmin}_X \, \|Z^{(k)}\|_* + \langle U^{(k)}, X - Z^{(k)} \rangle + \frac{\rho}{2} \|X - Z^{(k)}\|_F^2$$
+$$X^{(k+1)} = \text{arg}\min_X \, \|Z^{(k)}\|_* + \langle U^{(k)}, X - Z^{(k)} \rangle + \frac{\rho}{2} \|X - Z^{(k)}\|_F^2$$
 
 2. **Update $Z$:** Solve for $Z$ by minimizing the Augmented Lagrangian with respect to $Z$ while holding $X$ and $U$ fixed. This involves solving:
 
-$$Z^{(k+1)} = \text{argmin}_Z \, \|Z\|_* + \langle U^{(k)}, X^{(k+1)} - Z \rangle + \frac{\rho}{2} \|X^{(k+1)} - Z\|_F^2$$
+$$Z^{(k+1)} = \text{arg}\min_Z \, \|Z\|_* + \langle U^{(k)}, X^{(k+1)} - Z \rangle + \frac{\rho}{2} \|X^{(k+1)} - Z\|_F^2$$
 
 3. **Update $U$:** Update the dual variable $U$ by:
 
@@ -530,4 +532,3 @@ The iterations stop when the primal and dual residuals are sufficiently small, i
 
 When these residuals are smaller than predefined thresholds, the algorithm is considered to have converged.
 
-I hope this translation captures the essence of your content! If you have more details or further questions, feel free to ask.
