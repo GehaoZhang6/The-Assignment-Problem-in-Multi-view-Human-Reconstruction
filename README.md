@@ -181,3 +181,167 @@ $$f(x_1, x_2) = \left(\frac{1}{2}\right)^2 + \left(\frac{1}{2}\right)^2 = \frac{
 The equality and inequality constraints are both satisfied, and $\nu = 0$.
 
 This indicates that $(x_1, x_2) = \left(\frac{1}{2}, \frac{1}{2}\right)$ is the optimal solution to this optimization problem, satisfying all the constraints.
+
+### (3) Why can we establish the equation like this?
+When we find the extreme value, the gradient of $f(x)$ is linearly related to the gradient of the constraint condition, i.e.:
+
+$$
+\nabla f(x)=\lambda \nabla g(x) + \mu  \nabla h(x) \\
+h(x)<0 \quad \mu>0
+$$
+
+Thus, the given conditions become:
+
+$$
+\text{min } f(x)\\
+g(x)=0\\
+h(x)<0\\
+\mu >0
+$$
+
+Construct the Lagrange function:
+
+$$
+L(x,\lambda )=f(x)+\lambda g(x) +\mu h(x)
+$$
+
+The solving conditions are:
+
+$$
+\frac {\nabla L(x,\lambda )}{\nabla x}=0 \quad \text{(The linearly related gradients cancel each other out)}\\
+\frac {\nabla L(x,\lambda )}{\nabla \lambda}=0 \quad \text{(Ensuring the constraint condition)}
+$$
+
+The reason $\mu > 0$ is as follows: On the side of $g(x) \leq 0$, the gradient of $g(x)$ points towards the side greater than $0$, which is the infeasible side. The problem we are solving is a minimization problem, so the gradient of $f(x)$ at the intersection points towards the feasible side. In other words, the two gradients must be opposite, hence $\mu > 0$.
+
+### (4) Lagrangian Dual Solution
+The Lagrangian dual function is the function obtained by taking the Lagrangian function $\lambda,\mu$ as constants and minimizing with respect to $x$:
+
+$$
+g(\lambda, \mu )= \min_{x}(L(x,λ,\mu))\\
+L(x,λ,\mu)=f(x)+λ^Th(x)+\mu^Tg(x)\\
+h(x)=0, \quad g(x) \mu <= 0\\
+\therefore \text{min }f(x)\geq \text{min }L(x,λ,\mu)\geq g(\lambda, \mu )
+$$
+
+The problem of solving $\text{min }f(x)$ turns into solving the maximum of $g(\lambda, \mu)$.
+
+The above example can also be solved using the dual approach:
+
+**Construct the Lagrange function:**
+
+$$
+L(x_1,x_2,\lambda,\mu)=x_1^2+x_2^2+\lambda(x_1+x_2-1)+\mu(x_1-x_2-1)
+$$
+
+**Take the derivative with respect to $x$:**
+
+$$
+\begin{cases}
+\frac{\nabla L(x_1,x_2,\lambda,\mu)}{\nabla x_1}=2x_1+\lambda+\mu=0\\
+\frac{\nabla L(x_1,x_2,\lambda,\mu)}{\nabla x_2}=2x_2+\lambda-\mu=0\\
+\end{cases}
+$$
+
+$$
+\begin{cases}
+x_1=-\frac{\lambda+\mu}{2}\\
+x_2=\frac{\mu-\lambda}{2}\\
+\end{cases}
+$$
+
+We get:
+
+$$
+g(\lambda,\mu)=-\frac{\lambda^2+\mu^2}{2}-\lambda-\mu
+$$
+
+**Take the derivative with respect to $\lambda$ and $\mu$ and set it to zero to find the maximum value:**
+
+We differentiate the Lagrangian function with respect to $\lambda$ and $\mu$ and set it to zero:
+
+$$
+\begin{cases}
+\frac{\partial}{\partial \lambda}\left(-\lambda^2 + \frac{\mu^2}{2} - \lambda - \mu\right) = -\lambda - 1 = 0 \quad \Rightarrow \quad \lambda = -1\\
+\frac{\partial}{\partial \mu}\left(-\lambda^2 + \frac{\mu^2}{2} - \lambda - \mu\right) = -\mu - 1 = 0 \quad \Rightarrow \quad \mu = -1
+\end{cases}
+$$
+
+Since $\lambda \geq 0$ and $\mu \geq 0$, we get $\lambda = 0$ and $\mu = 0$.
+
+**Substitute $\lambda = 0$ and $\mu = 0$:**
+
+$$
+g(0,0) = -0^2 + \frac{0^2}{2} - 0 - 0 = 0
+$$
+
+**Result of the Dual Problem:**
+
+The maximum value of the dual problem is $0$, which is a lower bound on the optimal solution of the original problem. By solving the original problem, we can get the optimal solution $x_1 = \frac{1}{\sqrt{2}}$ and $x_2 = \frac{1}{\sqrt{2}}$, with the objective function value:
+
+$$
+f^* = x_1^2 + x_2^2 = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}
+$$
+
+This value is greater than the solution of the dual problem $0$, indicating that the dual problem does not provide an exact lower bound for the optimal solution of the original problem, but it still provides a lower bound.
+
+## 4. Constrained Optimization Problem
+### (1) Convex Function
+A real-valued function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is called a convex function if for all $x_1, x_2 \in \mathbb{R}^n$ and all $\theta \in [0,1]$, the following holds:
+
+$$
+f(\theta x_1 + (1 - \theta) x_2) \leq \theta f(x_1) + (1 - \theta) f(x_2)
+$$
+
+How to determine if a function is convex?
+- For a univariate function $f(x)$, we can determine this by checking the sign of its second derivative $f''(x)$. If the second derivative is always non-negative, i.e., $f''(x) \geq 0$, then $f(x)$ is a convex function.
+- For a multivariate function $f(X)$, we can determine this by checking the positive definiteness of its Hessian matrix. The Hessian matrix is a square matrix of second-order partial derivatives of the multivariate function. If the Hessian matrix is positive semi-definite, then $f(X)$ is a convex function.
+
+Why do we require the function to be convex?
+- A convex function has a global optimal solution.
+
+### (2) Dual Ascent Method
+### Dual Ascent Method:
+
+Consider the following optimization problem:
+
+$$
+\text{minimize} \ f(x) \quad \text{s.t.} \quad Ax = b \quad \text{(1)}
+$$
+
+Its Lagrangian form is:
+
+$$
+L(x, \lambda) = f(x) + \lambda^{T}(Ax - b) \quad \text{(2)}
+$$
+
+The dual form is:
+
+$$
+g(\lambda) = \inf_{x} L(x, \lambda) = -f^{*}(-A^{T}\lambda) - b^{T}\lambda \quad \text{(3)}
+$$
+
+where $f^{*}$ is the conjugate function of $f$.
+
+The dual problem is:
+
+$$
+\text{maximize} \ g(\lambda) \quad \text{(4)}
+$$
+
+The iterative update of the dual ascent method is:
+
+**x-minimization, i.e., constructing $\min_{x}g(\lambda)$:**
+
+$$
+x^{k+1} = \text{argmin}_{x} L(x, \lambda^{k}) \quad \text{(5)}
+$$
+
+**Dual variable update, then maximize $g(\lambda)$:**
+
+$$
+\lambda^{k+1} = \lambda^{k} + \alpha^{k}(Ax^{k+1} - b) \quad \text{(6)}
+$$
+
+where $\alpha^{k} > 0$ is the step size.
+
