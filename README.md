@@ -344,4 +344,216 @@ $$
 $$
 
 where $\alpha^{k} > 0$ is the step size.
+Sure! Here's the translation of your text into English:
 
+### Example:
+
+**Optimization Problem:**
+
+$$
+\text{minimize}_{x_1, x_2} \quad f(x_1, x_2) = 2(x_1 - 1)^2 + (x_2 + 2)^2
+$$
+subject to:
+$$
+\begin{cases}
+x_1 \geq 2 \\
+x_2 \geq 0
+\end{cases}
+$$
+
+**Lagrangian Function:**
+
+$$
+L(x_1, x_2, \lambda_1, \lambda_2) = 2(x_1 - 1)^2 + (x_2 + 2)^2 + \lambda_1(2 - x_1) + \lambda_2(-x_2)
+$$
+
+- **Analytical Solution for Decision Variables $x_1, x_2$:**
+
+$$
+\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_1} = 0
+$$
+$$
+\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_2} = 0
+$$
+
+Solving these equations, we get:
+
+$$
+x_1^* = \frac{\lambda_1}{4} + 1
+$$
+$$
+x_2^* = \frac{\lambda_2}{2} - 2
+$$
+
+- **Iterative Solution for Decision Variables $x_1, x_2$:**
+$$
+\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_1} = 4(x_1-1)-\lambda_1
+$$
+$$
+\frac{\partial L(x_1, x_2, \lambda_1, \lambda_2)}{\partial x_2} = 2(x_2+2)-\lambda_2
+$$
+
+Solving these equations, we get:
+
+$$
+x_1^{k+1} = x_1^k - t_x[4(x_1-1) - \lambda_1]
+$$
+$$
+x_2^{k+1} = x_2^k - t_x[2(x_2+2) - \lambda_2]
+$$
+
+The negative sign is because we are moving in the direction of the negative gradient, which will gradually reduce the value of the Lagrangian function $L(x, \lambda)$.
+
+**Lagrangian Function Update Formulas:**
+
+For the $(k+1)$-th iteration:
+
+$$
+\lambda_1^{k+1} = \lambda_1^k + t_\lambda (2 - x_1)
+$$
+$$
+\lambda_2^{k+1} = \lambda_2^k + t_\lambda (-x_2)
+$$
+
+The positive sign is because we are maximizing the dual function.
+
+Termination Conditions:
+- Dual gap: Iteration stops when $f(x) - L(x_1, x_2, \lambda_1, \lambda_2) < \epsilon$
+- Dual function change: Iteration stops when the change in the dual function $g(\lambda)$ between consecutive iterations is less than a preset threshold $\epsilon$, indicating convergence.
+- Change in Lagrange multipliers: Iteration stops when the change in Lagrange multipliers is less than a certain threshold $\epsilon$.
+
+### (3) Augmented Lagrangian
+To increase the robustness of the dual ascent method and relax the strong convex constraints of the function $f(x)$, we introduce the Augmented Lagrangian (AL) form:
+$$
+L_{\rho}(x, \lambda) = f(x) + \lambda^{T}(Ax - b) + \frac{\rho}{2} \|Ax - b\|_{2}^{2}
+$$
+where the penalty factor $\rho > 0$.
+Penalty function: If constraints are satisfied, there is no effect, but if constraints are not satisfied, a penalty will be applied.
+
+### (4) ADMM
+**Problem Model**
+
+The Alternating Direction Method of Multipliers (ADMM) is often used to solve equality-constrained optimization problems involving two variables. Its general form is:
+
+$$
+\min_{x,z} f(x) + g(z) \quad \text{s.t.} \quad Ax + Bz = c
+$$
+
+where $x \in \mathbb{R}^n$, $z \in \mathbb{R}^m$ are optimization variables, and in the equality constraint $A \in \mathbb{R}^{p \times n}$, $B \in \mathbb{R}^{p \times m}$, $c \in \mathbb{R}^p$, and both $f$ and $g$ are convex functions.
+
+The standard ADMM algorithm solves an equality-constrained problem where the two functions $f$ and $g$ are additive. This means that the two functions are parts of the overall optimization, contributing differently but simply added together.
+
+The core of the ADMM algorithm is the Augmented Lagrangian Method (ALM) for primal-dual problems. The Lagrangian function solves an optimization problem with $n$ variables and $k$ constraints. The Augmented Lagrangian Method (ALM) includes a penalty term to accelerate convergence.
+
+$$
+L_{\rho}(x, z, u) = f(x) + g(z) + u^T(Ax + Bz - c) + \frac{\rho}{2}\|Ax + Bz - c\|^2_2
+$$
+
+The Augmented Lagrangian function adds a penalty term related to the constraint conditions to the original problem's Lagrangian function, with $\rho > 0$ as a parameter influencing iteration efficiency. The function for minimizing is + dual term and penalty term, for maximizing is - dual term and penalty term.
+
+**Algorithm Process**
+
+Each step updates one variable while fixing the other two, and repeats this alternation.
+
+- Step 1: Update $x$:
+  $$
+  x^{(i)} = \mathrm{argmin}_x \, L_{\rho}(x, z^{(i-1)}, u^{(i-1)})
+  $$
+
+- Step 2: Update $z$:
+  $$
+  z^{(i)} = \mathrm{argmin}_z \, L_{\rho}(x^{(i)}, z, u^{(i-1)})
+  $$
+
+- Step 3: Update $u$:
+  $$
+  u^{(i)} = u^{(i-1)} + \rho (Ax^{(i)} + Bz^{(i)} - c)
+  $$
+
+## 5. Linear Algebra
+### (1) Rank
+Why is $rank(A)$ a non-convex problem?
+Consider the matrix set $\{P : \text{rank}(P) \leq k\}$; this is a non-convex set. Suppose two matrices $P_1$ and $P_2$ have ranks $k_1$ and $k_2$ respectively (assuming $k_1 = k_2 = k$). Then, $\lambda P_1 + (1 - \lambda) P_2$ (where $0 \leq \lambda \leq 1$) may have a rank greater than $k$. This means the rank minimization problem does not have the properties of a convex set.
+
+### (2) Nuclear Norm
+The nuclear norm, also known as the trace norm, is a convex function. It is defined as the sum of all singular values of a matrix.
+
+### (3) Frobenius Norm
+The Frobenius norm is a measure of matrix size. It is defined as the square root of the sum of the squares of all elements in the matrix. For a matrix $A \in \mathbb{R}^{m \times n}$, its Frobenius norm is defined as:
+
+$$
+\|A\|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} |a_{ij}|^2}
+$$
+
+where $a_{ij}$ represents the element in the $i$-th row and $j$-th column of matrix $A$.
+
+### (4) Singular Value Thresholding (SVT)
+Singular Value Thresholding (SVT) is used to handle nuclear norm minimization problems. Specifically, SVT applies "soft thresholding" to the singular values of a matrix, i.e., subtracting a fixed threshold from each singular value (setting to zero if below the threshold), to obtain a low-rank approximation matrix. This processing can effectively approximate the solution to nuclear norm minimization.
+
+**Example:**
+Suppose we have a partially observed matrix $M$, with observed data at positions in matrix $\Omega$. We want to complete the matrix by minimizing its nuclear norm, i.e., finding a matrix $X$ such that the nuclear norm of $X$ is minimized and $X$ is consistent with $M$ at $\Omega$.
+
+This problem can be formalized as:
+
+$$
+\min_X \|X\|_* \\
+\text{subject to} \quad X_\Omega = M_\Omega
+$$
+
+where $\|X\|_*$ denotes the nuclear norm of matrix $X$, and $X_\Omega = M_\Omega$ ensures consistency of $X$ with $M$ at $\Omega$.
+
+### Solving Using ADMM
+
+#### Introducing Auxiliary Variables
+
+To use ADMM, we introduce
+
+ an auxiliary matrix variable $Z$ to represent the matrix $X$.
+
+$$
+\min_{X, Z} \|Z\|_* \\
+\text{subject to} \quad X = Z \\
+\text{and} \quad X_\Omega = M_\Omega
+$$
+
+#### Augmented Lagrangian Form
+
+The Augmented Lagrangian for this problem is:
+
+$$
+L(X, Z, U) = \|Z\|_* + \langle U, X - Z \rangle + \frac{\rho}{2} \|X - Z\|_F^2
+$$
+
+where $U$ is the dual variable associated with the equality constraint $X = Z$.
+
+#### Iterative Update
+
+1. **Update $X$:** Solve for $X$ by minimizing the Augmented Lagrangian with respect to $X$ while holding $Z$ and $U$ fixed. This involves solving:
+
+$$
+X^{(k+1)} = \text{argmin}_X \, \|Z^{(k)}\|_* + \langle U^{(k)}, X - Z^{(k)} \rangle + \frac{\rho}{2} \|X - Z^{(k)}\|_F^2
+$$
+
+2. **Update $Z$:** Solve for $Z$ by minimizing the Augmented Lagrangian with respect to $Z$ while holding $X$ and $U$ fixed. This involves solving:
+
+$$
+Z^{(k+1)} = \text{argmin}_Z \, \|Z\|_* + \langle U^{(k)}, X^{(k+1)} - Z \rangle + \frac{\rho}{2} \|X^{(k+1)} - Z\|_F^2
+$$
+
+3. **Update $U$:** Update the dual variable $U$ by:
+
+$$
+U^{(k+1)} = U^{(k)} + \rho (X^{(k+1)} - Z^{(k+1)})
+$$
+
+#### Termination Conditions
+
+The iterations stop when the primal and dual residuals are sufficiently small, indicating convergence. The residuals measure the satisfaction of the constraints and the optimality of the solution, respectively.
+
+**Termination Conditions:**
+1. Primal residual: $\|X^{(k+1)} - Z^{(k+1)}\|_F$
+2. Dual residual: $\rho \|Z^{(k+1)} - Z^{(k)}\|_F$
+
+When these residuals are smaller than predefined thresholds, the algorithm is considered to have converged.
+
+I hope this translation captures the essence of your content! If you have more details or further questions, feel free to ask.
