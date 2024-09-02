@@ -1,4 +1,7 @@
-# Ⅰ. Mathematical Derivation
+# Ⅰ. Introduction
+**This project is a collaborative internship initiative between Southeast University (SEU) and Google. The primary objective is to develop a system for three-dimensional (3D) reconstruction of human poses from multiple camera perspectives. By leveraging data captured from various camera angles, the project aims to create an accurate and comprehensive 3D model of human body postures.**
+
+# Ⅱ. Mathematical Derivation
 
 ## 1. Fundamental Matrix $F$:
 
@@ -603,7 +606,7 @@ The Hungarian Algorithm is used to solve two problems: finding the maximum match
 ### (10) KM Algorithm
 The overall idea is to match a vertex to the maximum weight edge and use the Hungarian Algorithm to achieve the maximum matching. Ultimately, this results in the optimal matching.
 
-# Ⅱ Challenges
+# Ⅲ. Challenges
 ## 1. Affinity Matrix:
 **Input:** Fundamental matrix, set of all key points  
 **Output:** Matching matrix  
