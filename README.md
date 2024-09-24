@@ -1,5 +1,5 @@
 # Ⅰ. Introduction
-**This project is a collaborative internship initiative between Southeast University (SEU) and Google. The primary objective is to develop a system for three-dimensional (3D) reconstruction of human poses from multiple camera perspectives. By leveraging data captured from various camera angles, the project aims to create an accurate and comprehensive 3D model of human body postures.**
+**The primary objective is to develop a system for three-dimensional (3D) reconstruction of human poses from multiple camera perspectives. By leveraging data captured from various camera angles, the project aims to create an accurate and comprehensive 3D model of human body postures.**
 <table>
   <tr>
     <td style="text-align: center;">
