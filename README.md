@@ -245,6 +245,8 @@ $$
 f(\theta x_1 + (1 - \theta) x_2) \leq \theta f(x_1) + (1 - \theta) f(x_2)
 $$
 
+Suppose:
+
 $$g(\lambda, \mu )= \min_{x}(L(x,λ,\mu))$$
 
 $$L(x,λ,\mu)=f(x)+λ^Th(x)+\mu^Tg(x)$$
