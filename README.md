@@ -93,7 +93,9 @@ Given a primal optimization problem:
 
 $$
 \text{minimize} \quad f(x)\\
+
 \text{subject to} \quad h_i(x) = 0, \quad i = 1, \dots, m\\
+
 g_j(x) \leq 0, \quad j = 1, \dots, p
 $$
 
