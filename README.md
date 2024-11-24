@@ -237,7 +237,13 @@ The reason $\mu > 0$ is as follows: On the side of $g(x) \leq 0$, the gradient o
 
 ### (4) Lagrangian Dual Solution
 The Lagrangian dual function is the function obtained by taking the Lagrangian function $\lambda,\mu$ as constants and minimizing with respect to $x$:
-#### Mainly because this is an affine transformation (that is, a linear transformation)$$f(\theta x_1 + (1 - \theta) x_2) \leq \theta f(x_1) + (1 - \theta) f(x_2)$$
+#### Mainly because this is an affine transformation (that is, a linear transformation)
+
+Which is:
+
+$$
+f(\theta x_1 + (1 - \theta) x_2) \leq \theta f(x_1) + (1 - \theta) f(x_2)
+$$
 
 $$g(\lambda, \mu )= \min_{x}(L(x,λ,\mu))$$
 
