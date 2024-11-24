@@ -204,10 +204,9 @@ This indicates that $(x_1, x_2) = \left(\frac{1}{2}, \frac{1}{2}\right)$ is the 
 ### (3) Why can we establish the equation like this?
 When we find the extreme value, the gradient of $f(x)$ is linearly related to the gradient of the constraint condition, i.e.:
 
-$$
-\nabla f(x)=\lambda \nabla g(x) + \mu  \nabla h(x) \\
-h(x)<0 \quad \mu>0
-$$
+$$\nabla f(x)=\lambda \nabla g(x) + \mu  \nabla h(x) $$
+
+$$h(x)<0 \quad \mu>0$$
 
 Thus, the given conditions become:
 
