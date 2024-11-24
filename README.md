@@ -687,7 +687,9 @@ P_{ii} = I \\
 $$
 
 ### (3) Solving the Lagrangian Equation with ADMM + SVT
-Introduce an auxiliary variable $Q$ (the auxiliary variable is mainly to solve for the matrix of minimum rank:
+Introduce an auxiliary variable $Q$ (in order to reduce the same variables appearing in different functions）the auxiliary variable is mainly to solve for the matrix of minimum rank:
+
+
 
 $$\min_P - \langle A, P \rangle + \lambda \{||}Q\{||}_*$$
 
