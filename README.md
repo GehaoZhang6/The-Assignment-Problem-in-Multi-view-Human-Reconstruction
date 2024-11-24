@@ -91,13 +91,12 @@ Since $X_1$ and $X_2$ multiplied by this line are zero, it shows that the line p
 
 Given a primal optimization problem:
 
-$$
-\text{minimize} \quad f(x)\\
+$$\text{minimize} \quad f(x)$$
 
-\text{subject to} \quad h_i(x) = 0, \quad i = 1, \dots, m\\
+$$\text{subject to} \quad h_i(x) = 0, \quad i = 1, \dots, m$$
 
-g_j(x) \leq 0, \quad j = 1, \dots, p
-$$
+$$g_j(x) \leq 0, \quad j = 1, \dots, p$$
+
 
 where $f(x)$ is the objective function, $h_i(x) = 0$ represents the equality constraints, and $g_j(x) \leq 0$ represents the inequality constraints.
 
