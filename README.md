@@ -210,12 +210,13 @@ $$h(x)<0 \quad \mu>0$$
 
 Thus, the given conditions become:
 
-$$
-\text{min } f(x)\\
-g(x)=0\\
-h(x)<0\\
-\mu >0
-$$
+$$\text{min } f(x)$$
+
+$$g(x)=0$$
+
+$$h(x)<0$$
+
+$$\mu >0$$
 
 Construct the Lagrange function:
 
